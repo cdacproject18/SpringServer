@@ -18,7 +18,7 @@ import com.mongodb.DBObject;
 @Repository
 @Transactional
 public class UserDao {
-	static String db_name = "mydb", db_collection = "mycollection";
+	static String db_name = "myDB", db_collection = "myCollection";
 	private static Logger log = Logger.getLogger(UserDao.class);
 
 	// Fetch all users from the mongo database.

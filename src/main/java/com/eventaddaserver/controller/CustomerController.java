@@ -7,8 +7,12 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eventaddaserver.dao.*;
@@ -32,4 +36,39 @@ public class CustomerController {
 			return new ResponseEntity<String>("Fetching a/c info failed " + e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	// Opening the add new user form page.
+		@GetMapping("/add")
+		public String addCustomer(Model model) {
+			log.debug("Request to open the new cutomer form page");
+			model.addAttribute("custAttr", new Customer());
+			return "form";
+		}
+		
+		
+		// Opening the edit user form page.
+		@GetMapping(value = "/edit")
+		public String editCustomer(@RequestParam(value = "id", required = true) String id, Model model) {
+			log.debug("Request to open the edit Customer form page");
+			model.addAttribute("custAttr", customerDao.findUserById(id));
+			return "form";
+		}
+
+		// Deleting the specified user.
+		@GetMapping("/delete")
+		public String delete(@RequestParam(value = "id", required = true) String id, Model model) {
+			customerDao.delete(id);
+			return "redirect:list";
+		}
+
+		// Adding a new user or updating an existing user.
+		@PostMapping("/save")
+		public String save(@ModelAttribute("custAttr") Customer cu) {
+			if (cu.getId() != null && !cu.getId().trim().equals("")) {
+				customerDao.edit(cu);
+			} else {
+				customerDao.add(cu);
+			}
+			return "redirect:list";
+		}
 }

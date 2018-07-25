@@ -2,7 +2,6 @@ package com.eventaddaserver.dao;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -11,10 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.eventaddaserver.factory.MongoFactory;
 import com.eventaddaserver.pojos.Seat;
-import com.eventaddaserver.pojos.SeatLocation;
 import com.eventaddaserver.pojos.Section;
-import com.eventaddaserver.pojos.Ticket;
-import com.eventaddaserver.pojos.Venue;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
@@ -48,7 +44,6 @@ public class SectionDao {
 				DBObject seatObject = (DBObject) it.next();
 				Seat seat = new Seat();
 				seat.setLocation(seatObject.get("location").toString());
-				System.out.println(seatObject.get("time"));
 				seat.setFlag(Boolean.valueOf(seatObject.get("flag").toString()));
 				try {
 					seat.setTime(MongoFactory.getDate(seatObject.get("time").toString()));
@@ -95,7 +90,6 @@ public class SectionDao {
 			DBObject seatObject = (DBObject) it.next();
 			Seat seat = new Seat();
 			seat.setLocation(seatObject.get("location").toString());
-			System.out.println(seatObject.get("time"));
 			seat.setFlag(Boolean.valueOf(seatObject.get("flag").toString()));
 			try {
 				seat.setTime(MongoFactory.getDate(seatObject.get("time").toString()));
@@ -122,6 +116,76 @@ public class SectionDao {
 			// Deleting the selected category from the mongo database.
 			coll.remove(item);
 			return "Deleted item";
+		} catch (Exception e) {
+			System.out.println("Failed: " + e.getMessage());
+		}
+		return "Failed";
+	}
+
+	// Add a new category to the mongo database.
+	public String add(Section s) {
+		try {
+			DBCollection coll = MongoFactory.getCollection(db_name, db_collection);
+
+			// Create a new object and add the new category details to this object.
+			BasicDBObject doc = new BasicDBObject();
+			doc.put("_id", s.get_id());
+			doc.put("name", s.getName());
+			doc.put("noofseats", s.getNoOfSeats());
+			doc.put("price", s.getPrice());
+
+			Iterator<Seat> it = s.getSeats().iterator();
+			BasicDBList list = new BasicDBList();
+			while (it.hasNext()) {
+				Seat l = it.next();
+				BasicDBObject obj = new BasicDBObject();
+				obj.put("location", l.getLocation());
+				obj.put("time", l.getTime());
+				obj.put("flag", l.getFlag());
+				list.add(obj);
+			}
+			doc.put("seats", list);
+			coll.insert(doc);
+
+			// Save a new category to the mongo collection.
+			return "Section added";
+		} catch (Exception e) {
+			System.out.println("Failed: " + e.getMessage());
+		}
+		return "Failed";
+	}
+
+	// Update the selected venue in the mongo database.
+	public String edit(Section section) {
+		try {
+			// Fetching the venue details.
+			BasicDBObject existing = (BasicDBObject) getDBObject(section.get_id().toString());
+
+			DBCollection coll = MongoFactory.getCollection(db_name, db_collection);
+
+			// Create a new object and assign the updated details.
+			BasicDBObject edited = new BasicDBObject();
+			edited.put("_id", section.get_id());
+			edited.put("name", section.getName());
+			edited.put("noofseats", section.getNoOfSeats());
+			edited.put("price", section.getPrice());
+
+			Iterator<Seat> it = section.getSeats().iterator();
+			BasicDBList list = new BasicDBList();
+			while (it.hasNext()) {
+				Seat l = it.next();
+				BasicDBObject obj = new BasicDBObject();
+				obj.put("location", l.getLocation());
+				obj.put("time", l.getTime());
+				obj.put("flag", l.getFlag());
+				list.add(obj);
+			}
+
+			edited.put("seats", list);
+
+			// Update the existing venue to the mongo database.
+			coll.update(existing, edited);
+			return "Section updated";
 		} catch (Exception e) {
 			System.out.println("Failed: " + e.getMessage());
 		}

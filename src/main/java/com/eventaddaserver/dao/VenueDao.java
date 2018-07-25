@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.eventaddaserver.factory.MongoFactory;
-import com.eventaddaserver.pojos.Category;
 import com.eventaddaserver.pojos.Venue;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -21,7 +20,7 @@ import com.mongodb.DBObject;
 public class VenueDao {
 	static String db_name = "mydb", db_collection = "venue";
 
-	// Fetch all users from the mongo database.
+	// Fetch all venue from the mongo database.
 	public List<Venue> getAll() {
 		List<Venue> venueList = new ArrayList<Venue>();
 		DBCollection coll = MongoFactory.getCollection(db_name, db_collection);
@@ -44,7 +43,7 @@ public class VenueDao {
 
 			venue.setSection(secList);
 
-			// Adding the user details to the list.
+			// Adding the venue details to the list.
 			venueList.add(venue);
 		}
 		return venueList;
@@ -96,7 +95,7 @@ public class VenueDao {
 			doc.put("section", venue.getSection());
 			doc.put("contact", venue.getContact());
 
-			// Save a new category to the mongo collection.
+			// Save a new venue to the mongo collection.
 			coll.insert(doc);
 			return "Venue added";
 		} catch (Exception e) {
@@ -130,16 +129,15 @@ public class VenueDao {
 		return "Failed";
 	}
 
-	// TODO: delete section with venue
 	// Delete a venue from the mongo database.
 	public String delete(String id) {
 		try {
-			// Fetching the required category from the mongo database.
+			// Fetching the required venue from the mongo database.
 			BasicDBObject item = (BasicDBObject) getDBObject(id);
 
 			DBCollection coll = MongoFactory.getCollection(db_name, db_collection);
 
-			// Deleting the selected category from the mongo database.
+			// Deleting the selected venue from the mongo database.
 			coll.remove(item);
 			return "Deleted item";
 		} catch (Exception e) {

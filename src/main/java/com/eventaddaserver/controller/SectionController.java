@@ -9,12 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eventaddaserver.dao.SectionDao;
 import com.eventaddaserver.pojos.Section;
-import com.eventaddaserver.pojos.Venue;
 
 @RestController
 @RequestMapping("/section")
@@ -43,11 +45,31 @@ public class SectionController {
 		}
 	}
 
-	@DeleteMapping("/{secId}")
-	public ResponseEntity<String> deleteVenue(@PathVariable int senId) {
-		System.out.println("in del " + senId);
+	@PostMapping("/")
+	public ResponseEntity<String> addSection(@RequestBody Section v) {
+		System.out.println("in create section");
 		try {
-			return new ResponseEntity<String>(sectionDao.delete(String.valueOf(senId)), HttpStatus.OK);
+			return new ResponseEntity<String>(sectionDao.add(v), HttpStatus.OK);
+		} catch (RuntimeException e) {
+			return new ResponseEntity<String>("Creating section failed" + e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@PutMapping("/")
+	public ResponseEntity<String> updateSection(@RequestBody Section s) {
+		System.out.println("in update section");
+		try {
+			return new ResponseEntity<String>(sectionDao.edit(s), HttpStatus.OK);
+		} catch (RuntimeException e) {
+			return new ResponseEntity<String>("Updating section info failed " + e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@DeleteMapping("/{secId}")
+	public ResponseEntity<String> deleteVenue(@PathVariable int secId) {
+		System.out.println("in del " + secId);
+		try {
+			return new ResponseEntity<String>(sectionDao.delete(String.valueOf(secId)), HttpStatus.OK);
 		} catch (RuntimeException e) {
 			return new ResponseEntity<String>("Venue del failed " + e.getMessage(), HttpStatus.NOT_FOUND);
 		}

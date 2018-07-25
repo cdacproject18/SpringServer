@@ -45,19 +45,6 @@ public class TicketDao {
 			doc.put("seatlocation",list);
 			doc.put("price", t.getPrice());
 			coll.insert(doc);
-			/*Iterator<SeatLocation> it=t.getSeatlocation().iterator();
-			BasicDBObject seatloc=null,update=null;
-			//List<BasicDBObject> li=new ArrayList<BasicDBObject>();
-			Map
-			while(it.hasNext()){
-			seatloc = new BasicDBObject();
-			seatloc.put("section", it.next().getSection());
-			seatloc.put("location", it.next().getLocation());
-			update = new BasicDBObject();
-			update.put("$push", new BasicDBObject("seatlocation",seatloc));
-			
-			}
-			coll.update(doc,update,true,true);*/
 			// Save a new category to the mongo collection.
 			
 			return "Ticket added";

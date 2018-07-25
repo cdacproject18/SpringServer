@@ -1,5 +1,9 @@
 package com.eventaddaserver.factory;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.apache.log4j.Logger;
 
 import com.mongodb.DB;
@@ -12,7 +16,8 @@ public class MongoFactory {
 	private static Logger log = Logger.getLogger(MongoFactory.class);
 
 	private static Mongo mongo;
-
+	private static SimpleDateFormat sdf;
+	
 	private MongoFactory() {
 	}
 
@@ -38,5 +43,10 @@ public class MongoFactory {
 	// Fetches the collection from the mongo database.
 	public static DBCollection getCollection(String db_name, String db_collection) {
 		return getDB(db_name).getCollection(db_collection);
+	}
+	
+	public static Date getDate(String dt) throws ParseException {
+		sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+		return sdf.parse(dt);
 	}
 }

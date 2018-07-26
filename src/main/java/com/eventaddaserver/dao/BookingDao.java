@@ -1,18 +1,14 @@
 package com.eventaddaserver.dao;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.eventaddaserver.factory.MongoFactory;
 import com.eventaddaserver.pojos.Booking;
-import com.eventaddaserver.pojos.Category;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
 @Repository
@@ -21,17 +17,18 @@ public class BookingDao {
 	static String db_name = "mydb", db_collection = "booking";
 
 	// Add a new Booking to the mongo database.
-	
+
 	public String add(Booking book) {
 		try {
 			DBCollection coll = MongoFactory.getCollection(db_name, db_collection);
 
-			// Create a new object and add the new category details to this object.
+			// Create a new object and add the new category details to this
+			// object.
 			BasicDBObject doc = new BasicDBObject();
 			doc.put("_id", book.get_id());
 			doc.put("timestamp", book.getTimestamp());
-			doc.put("paymentstatus",book.getPaymentstatus());
-			doc.put("eventid",book.getEventid());
+			doc.put("paymentstatus", book.getPaymentstatus());
+			doc.put("eventid", book.getEventid());
 			doc.put("customerid", book.getCustomerid());
 			doc.put("nooftickets", book.getNooftickets());
 			// Save a new category to the mongo collection.
@@ -42,8 +39,6 @@ public class BookingDao {
 		}
 		return "Failed";
 	}
-
-	
 
 	// Delete a booking from the mongo database.
 	public String delete(String id) {
@@ -76,21 +71,21 @@ public class BookingDao {
 
 	// Fetching a single booking details from the mongo database.
 	public Booking findBookingById(String id) {
-		Booking b= new Booking();
+		Booking b = new Booking();
 		DBObject dbo = getDBObject(id);
 
 		b.set_id(dbo.get("_id").toString());
-		try{
-		b.setTimestamp(MongoFactory.getDate(dbo.get("timestamp").toString()));
-		}catch(ParseException e)
-		{
-			b.set_id(dbo.get("id").toString());
-			b.setCustomerid(dbo.get("customerid").toString());
-			b.setEventid(dbo.get("eventid").toString());
-			b.setNooftickets(dbo.get("nooftickets").toString());
-			
+		try {
+			b.setTimestamp(MongoFactory.getDate(dbo.get("timestamp").toString()));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		b.setPaymentstatus(Boolean.valueOf(dbo.get("paymentstatus").toString()));
+		b.setCustomerid(dbo.get("customerid").toString());
+		b.setEventid(dbo.get("eventid").toString());
+		b.setNooftickets(dbo.get("nooftickets").toString());
+
 		// Return booking object.
 		return b;
 	}
-}
 }

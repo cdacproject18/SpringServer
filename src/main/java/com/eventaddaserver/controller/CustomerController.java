@@ -7,22 +7,21 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.eventaddaserver.dao.*;
-import com.eventaddaserver.pojos.*;
+import com.eventaddaserver.dao.CustomerDao;
+import com.eventaddaserver.pojos.Customer;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/customer")
 public class CustomerController {
 	private static Logger log = Logger.getLogger(CustomerController.class);
@@ -40,43 +39,39 @@ public class CustomerController {
 			return new ResponseEntity<String>("Fetching a/c info failed " + e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
-	
+
 	// Opening the add new user form page.
-		@PostMapping("/")
-		public ResponseEntity<String> addCustomer(@RequestBody Customer c) {
-			System.out.println("in add customer");
-			try {
-				return new ResponseEntity<String>(customerDao.add(c), HttpStatus.OK);
-			} catch (RuntimeException ex) {
-				return new ResponseEntity<String>("Creating event failed" + ex.getMessage(), HttpStatus.NOT_FOUND);
-			}
+	@PostMapping("/")
+	public ResponseEntity<String> addCustomer(@RequestBody Customer c) {
+		System.out.println("in add customer");
+		try {
+			return new ResponseEntity<String>(customerDao.add(c), HttpStatus.OK);
+		} catch (RuntimeException ex) {
+			return new ResponseEntity<String>("Creating event failed" + ex.getMessage(), HttpStatus.NOT_FOUND);
 		}
-		
-		
-		// Opening the edit user form page.
-		@PutMapping(value = "/")
-		public ResponseEntity<String> updateCustomer(@RequestBody Customer c) {
-			System.out.println("in update customer");
-			try
-			{
-				return new ResponseEntity<String>(customerDao.edit(c),HttpStatus.OK);
-			}catch (RuntimeException e) {
-				return new ResponseEntity<String>("Updating customer failed"+e.getMessage(),HttpStatus.NOT_FOUND);
-			}
+	}
+
+	// Opening the edit user form page.
+	@PutMapping(value = "/")
+	public ResponseEntity<String> updateCustomer(@RequestBody Customer c) {
+		System.out.println("in update customer");
+		try {
+			return new ResponseEntity<String>(customerDao.edit(c), HttpStatus.OK);
+		} catch (RuntimeException e) {
+			return new ResponseEntity<String>("Updating customer failed" + e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+	}
+
+	// Deleting the specified user.
+	@DeleteMapping("/{custId}")
+	public ResponseEntity<String> delete(@PathVariable int custId) {
+		System.out.println("in remove customer");
+		try {
+			return new ResponseEntity<String>(customerDao.delete(String.valueOf(custId)), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<String>("Deleion failed" + e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 
-		// Deleting the specified user.
-		@DeleteMapping("/{custId}")
-		public ResponseEntity<String> delete(@PathVariable int custId) {
-			System.out.println("in remove customer");
-			try{
-			 return new ResponseEntity<String>(customerDao.delete(String.valueOf(custId)), HttpStatus.OK);           
-			}catch (Exception e) {
-				return new ResponseEntity<String>("Deleion failed"+e.getMessage(), HttpStatus.NOT_FOUND);
-			}
-			
-		}
+	}
 
-		
-		
 }

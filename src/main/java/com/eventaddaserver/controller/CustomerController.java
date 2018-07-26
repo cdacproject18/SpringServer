@@ -8,9 +8,13 @@ import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,37 +42,41 @@ public class CustomerController {
 	}
 	
 	// Opening the add new user form page.
-		@GetMapping("/add")
-		public String addCustomer(Model model) {
-			log.debug("Request to open the new cutomer form page");
-			model.addAttribute("custAttr", new Customer());
-			return "form";
+		@PostMapping("/")
+		public ResponseEntity<String> addCustomer(@RequestBody Customer c) {
+			System.out.println("in add customer");
+			try {
+				return new ResponseEntity<String>(customerDao.add(c), HttpStatus.OK);
+			} catch (RuntimeException ex) {
+				return new ResponseEntity<String>("Creating event failed" + ex.getMessage(), HttpStatus.NOT_FOUND);
+			}
 		}
 		
 		
 		// Opening the edit user form page.
-		@GetMapping(value = "/edit")
-		public String editCustomer(@RequestParam(value = "id", required = true) String id, Model model) {
-			log.debug("Request to open the edit Customer form page");
-			model.addAttribute("custAttr", customerDao.findUserById(id));
-			return "form";
+		@PutMapping(value = "/")
+		public ResponseEntity<String> updateCustomer(@RequestBody Customer c) {
+			System.out.println("in update customer");
+			try
+			{
+				return new ResponseEntity<String>(customerDao.edit(c),HttpStatus.OK);
+			}catch (RuntimeException e) {
+				return new ResponseEntity<String>("Updating customer failed"+e.getMessage(),HttpStatus.NOT_FOUND);
+			}
 		}
 
 		// Deleting the specified user.
-		@GetMapping("/delete")
-		public String delete(@RequestParam(value = "id", required = true) String id, Model model) {
-			customerDao.delete(id);
-			return "redirect:list";
+		@DeleteMapping("/{custId}")
+		public ResponseEntity<String> delete(@PathVariable int custId) {
+			System.out.println("in remove customer");
+			try{
+			 return new ResponseEntity<String>(customerDao.delete(String.valueOf(custId)), HttpStatus.OK);           
+			}catch (Exception e) {
+				return new ResponseEntity<String>("Deleion failed"+e.getMessage(), HttpStatus.NOT_FOUND);
+			}
+			
 		}
 
-		// Adding a new user or updating an existing user.
-		@PostMapping("/save")
-		public String save(@ModelAttribute("custAttr") Customer cu) {
-			if (cu.getId() != null && !cu.getId().trim().equals("")) {
-				customerDao.edit(cu);
-			} else {
-				customerDao.add(cu);
-			}
-			return "redirect:list";
-		}
+		
+		
 }

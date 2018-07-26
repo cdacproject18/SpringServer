@@ -34,7 +34,7 @@ public class CustomerDao {
 			DBObject dbObject = cursor.next();
 			Customer c= new Customer();
 			Address a= new Address();
-			c.setId(dbObject.get("_id").toString());
+			c.set_id(dbObject.get("_id").toString());
 			c.setName(dbObject.get("name").toString());
 			c.setNumber(dbObject.get("number").toString());
 			a.setStreet(((DBObject)dbObject.get("address")).get("street").toString());
@@ -56,50 +56,52 @@ public class CustomerDao {
 	}
 	
 	// Add a new user to the mongo database.
-	public Boolean add(Customer cust) {
-		boolean output = false;
+	public String add(Customer cust) {
+		
 		int c=101;
-		log.debug("Adding a new user to the mongo database; Entered user_name is= " + cust.getName());
+		System.out.println("Adding a new user to the mongo database; Entered user_name is= " + cust.getName());
 		try {
 			DBCollection coll = MongoFactory.getCollection(db_name, db_collection);
 
 			// Create a new object and add the new user details to this object.
 			BasicDBObject doc = new BasicDBObject();
-			doc.put("_id", String.valueOf(c++));
+			doc.put("_id",cust.get_id());
 			doc.put("name", cust.getName());
 			doc.put("number", cust.getNumber());
 			doc.put("dob", cust.getDob());
 			doc.put("gender", cust.getGender());
+			Address a=cust.getAddress();
 			BasicDBObject add= new BasicDBObject();
-			add.put("street",cust.getAddress().getStreet() );
-			add.put("city",cust.getAddress().getCity() );
-			add.put("state",cust.getAddress().getState() );
+			add.put("street",a.getStreet() );
+			add.put("city",a.getCity() );
+			add.put("state",a.getState() );
+			System.out.println(a);
 			doc.put("address",add);
 			doc.put("email", cust.getEmail());
 
 			// Save a new user to the mongo collection.
 			coll.insert(doc);
-			output = true;
+			return "added successfully";
 		} catch (Exception e) {
-			output = false;
+			
 			log.error("An error occurred while saving a new customer to the mongo database", e);
 		}
-		return output;
+		return "Failed";
 	}
 
 	// Update the selected user in the mongo database.
-	public Boolean edit(Customer cust) {
-		boolean output = false;
-		log.debug("Updating the existing customer in the mongo database; Entered user_id is= " + cust.getId());
+	public String edit(Customer cust) {
+		
+		log.debug("Updating the existing customer in the mongo database; Entered user_id is= " + cust.get_id());
 		try {
 			// Fetching the user details.
-			BasicDBObject existing = (BasicDBObject) getDBObject(cust.getId());
+			BasicDBObject existing = (BasicDBObject) getDBObject(cust.get_id());
 
 			DBCollection coll = MongoFactory.getCollection(db_name, db_collection);
 
 			// Create a new object and assign the updated details.
 			BasicDBObject edited = new BasicDBObject();
-			edited.put("_id", cust.getId());
+			edited.put("_id", cust.get_id());
 			edited.put("name", cust.getName());
 			edited.put("number", cust.getNumber());
 			edited.put("dob", cust.getDob());
@@ -113,17 +115,17 @@ public class CustomerDao {
 
 			// Update the existing user to the mongo database.
 			coll.update(existing, edited);
-			output = true;
+			return "details updated";
 		} catch (Exception e) {
-			output = false;
+			
 			log.error("An error has occurred while updating an existing customer to the mongo database", e);
 		}
-		return output;
+		return "failed";
 	}
 
 	// Delete a user from the mongo database.
-	public Boolean delete(String id) {
-		boolean output = false;
+	public String delete(String id) {
+		
 		log.debug("Deleting an existing Customer from the mongo database; Entered user_id is= " + id);
 		try {
 			// Fetching the required user from the mongo database.
@@ -133,12 +135,12 @@ public class CustomerDao {
 
 			// Deleting the selected user from the mongo database.
 			coll.remove(item);
-			output = true;
+			return "Customer Removed Successfully";
 		} catch (Exception e) {
-			output = false;
+			
 			log.error("An error occurred while deleting an existing user from the mongo database", e);
 		}
-		return output;
+		return "Failed";
 	}
 
 	// Fetching a particular record from the mongo database.
@@ -164,7 +166,7 @@ public class CustomerDao {
 		where_query.put("_id", id);
 
 		DBObject dbo = coll.findOne(where_query);
-		u.setId(dbo.get("_id").toString());
+		u.set_id(dbo.get("_id").toString());
 		u.setName(dbo.get("name").toString());
 		u.setNumber(dbo.get("number").toString());
 		a.setStreet(((DBObject)dbo.get("address")).get("street").toString());

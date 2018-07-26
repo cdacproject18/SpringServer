@@ -35,12 +35,15 @@ public class Customer implements Serializable{
 		this.email = email;
 	}
 
-	public String getId() {
+	
+	public String get_id() {
 		return _id;
 	}
-	public void setId(String id) {
-		this._id = id;
+
+	public void set_id(String _id) {
+		this._id = _id;
 	}
+
 	public String getName() {
 		return name;
 	}

@@ -1,5 +1,6 @@
 package com.eventaddaserver.dao;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,11 +20,8 @@ import com.mongodb.DBObject;
 public class BookingDao {
 	static String db_name = "mydb", db_collection = "booking";
 
+	// Add a new Booking to the mongo database.
 	
-	
-
-/*	// Add a new category to the mongo database.
-	//dooooooooooooooooooo
 	public String add(Booking book) {
 		try {
 			DBCollection coll = MongoFactory.getCollection(db_name, db_collection);
@@ -32,41 +30,22 @@ public class BookingDao {
 			BasicDBObject doc = new BasicDBObject();
 			doc.put("_id", book.get_id());
 			doc.put("timestamp", book.getTimestamp());
-			doc.put("pa", category.getGenre());
-
+			doc.put("paymentstatus",book.getPaymentstatus());
+			doc.put("eventid",book.getEventid());
+			doc.put("customerid", book.getCustomerid());
+			doc.put("nooftickets", book.getNooftickets());
 			// Save a new category to the mongo collection.
 			coll.insert(doc);
-			return "Category added";
+			return "Successfully booked";
 		} catch (Exception e) {
 			System.out.println("Failed: " + e.getMessage());
 		}
 		return "Failed";
 	}
 
-	// Update the selected category in the mongo database.
-	public String edit(Category category) {
-		try {
-			// Fetching the category details.
-			BasicDBObject existing = (BasicDBObject) getDBObject(category.get_id().toString());
+	
 
-			DBCollection coll = MongoFactory.getCollection(db_name, db_collection);
-
-			// Create a new object and assign the updated details.
-			BasicDBObject edited = new BasicDBObject();
-			edited.put("_id", category.get_id());
-			edited.put("name", category.getName());
-			edited.put("genre", category.getGenre());
-
-			// Update the existing category to the mongo database.
-			coll.update(existing, edited);
-			return "Category updated";
-		} catch (Exception e) {
-			System.out.println("Failed: " + e.getMessage());
-		}
-		return "Failed";
-	}
-
-	// Delete a category from the mongo database.
+	// Delete a booking from the mongo database.
 	public String delete(String id) {
 		try {
 			// Fetching the required category from the mongo database.
@@ -76,7 +55,7 @@ public class BookingDao {
 
 			// Deleting the selected category from the mongo database.
 			coll.remove(item);
-			return "Deleted item";
+			return "Booking cancelled successfully";
 		} catch (Exception e) {
 			System.out.println("Failed: " + e.getMessage());
 		}
@@ -95,16 +74,23 @@ public class BookingDao {
 		return coll.findOne(where_query);
 	}
 
-	// Fetching a single category details from the mongo database.
-	public Category findCategoryById(String id) {
-		Category c = new Category();
+	// Fetching a single booking details from the mongo database.
+	public Booking findBookingById(String id) {
+		Booking b= new Booking();
 		DBObject dbo = getDBObject(id);
 
-		c.set_id(dbo.get("_id").toString());
-		c.setName(dbo.get("name").toString());
-		c.setGenre(dbo.get("genre").toString());
-
-		// Return category object.
-		return c;
-	}*/
+		b.set_id(dbo.get("_id").toString());
+		try{
+		b.setTimestamp(MongoFactory.getDate(dbo.get("timestamp").toString()));
+		}catch(ParseException e)
+		{
+			b.set_id(dbo.get("id").toString());
+			b.setCustomerid(dbo.get("customerid").toString());
+			b.setEventid(dbo.get("eventid").toString());
+			b.setNooftickets(dbo.get("nooftickets").toString());
+			
+		// Return booking object.
+		return b;
+	}
+}
 }

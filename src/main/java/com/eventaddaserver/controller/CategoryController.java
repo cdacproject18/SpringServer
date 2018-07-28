@@ -32,7 +32,7 @@ public class CategoryController {
 		try {
 			return new ResponseEntity<List<Category>>(categoryDao.getAll(), HttpStatus.OK);
 		} catch (RuntimeException e) {
-			return new ResponseEntity<String>("Fetching a/c info failed " + e.getMessage(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>("Fetching failed " + e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -43,7 +43,7 @@ public class CategoryController {
 			Category c = categoryDao.findCategoryById(String.valueOf(catId));
 			return new ResponseEntity<Category>(c, HttpStatus.OK);
 		} catch (RuntimeException e) {
-			return new ResponseEntity<String>("Fetching a/c info failed " + e.getMessage(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>("Fetching by id failed " + e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -63,7 +63,7 @@ public class CategoryController {
 		try {
 			return new ResponseEntity<String>(categoryDao.edit(c), HttpStatus.OK);
 		} catch (RuntimeException e) {
-			return new ResponseEntity<String>("Updating a/c info failed " + e.getMessage(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>("Updating failed " + e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 
 	}
@@ -74,7 +74,7 @@ public class CategoryController {
 		try {
 			return new ResponseEntity<String>(categoryDao.delete(String.valueOf(catId)), HttpStatus.OK);
 		} catch (RuntimeException e) {
-			return new ResponseEntity<String>("Closing  a/c info failed " + e.getMessage(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>("deleting failed " + e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
 

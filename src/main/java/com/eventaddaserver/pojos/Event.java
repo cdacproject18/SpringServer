@@ -15,13 +15,14 @@ public class Event implements Serializable {
 	private Date time;
 	private List<String> artist;
 	private List<String> language;
+	private List<String> image;
 
 	public Event() {
 		super();
 	}
 
 	public Event(String _id, String name, String categoryId, String description, String venueId, Date time,
-			List<String> artist, List<String> language) {
+			List<String> artist, List<String> language, List<String> image) {
 		super();
 		this._id = _id;
 		this.name = name;
@@ -31,6 +32,7 @@ public class Event implements Serializable {
 		this.time = time;
 		this.artist = artist;
 		this.language = language;
+		this.image = image;
 	}
 
 	public String get_id() {
@@ -95,6 +97,14 @@ public class Event implements Serializable {
 
 	public void setLanguage(List<String> language) {
 		this.language = language;
+	}
+
+	public List<String> getImage() {
+		return image;
+	}
+
+	public void setImage(List<String> image) {
+		this.image = image;
 	}
 
 }

@@ -33,6 +33,7 @@ public class EventDao {
 			DBObject dbObject = cursor.next();
 			ArrayList<String> artList = new ArrayList<String>();
 			ArrayList<String> langList = new ArrayList<String>();
+			ArrayList<String> imageList = new ArrayList<String>();
 
 			Event event = new Event();
 			event.set_id(dbObject.get("_id").toString());
@@ -49,6 +50,10 @@ public class EventDao {
 			for (Iterator<Object> it = langListObject.iterator(); it.hasNext();)
 				langList.add(it.next().toString());
 
+			BasicDBList imgListObject = (BasicDBList) dbObject.get("image");
+			for (Iterator<Object> it = imgListObject.iterator(); it.hasNext();)
+				imageList.add(it.next().toString());
+
 			try {
 				event.setTime(MongoFactory.getDate(dbObject.get("time").toString()));
 			} catch (ParseException e) {
@@ -58,7 +63,8 @@ public class EventDao {
 			event.setVenueId(dbObject.get("venueid").toString());
 			event.setArtist(artList);
 			event.setLanguage(langList);
-
+			event.setImage(imageList);
+			
 			// Adding the event details to the list.
 			eventList.add(event);
 		}
@@ -83,6 +89,7 @@ public class EventDao {
 		DBObject dbo = getDBObject(id);
 		ArrayList<String> artList = new ArrayList<String>();
 		ArrayList<String> langList = new ArrayList<String>();
+		ArrayList<String> imgList = new ArrayList<String>();
 
 		e.set_id(dbo.get("_id").toString());
 		e.setName(dbo.get("name").toString());
@@ -97,16 +104,20 @@ public class EventDao {
 
 		BasicDBList artListObject = (BasicDBList) dbo.get("artist");
 		BasicDBList langListObject = (BasicDBList) dbo.get("language");
+		BasicDBList imgListObject = (BasicDBList) dbo.get("image");
 
 		for (Iterator<Object> it = artListObject.iterator(); it.hasNext();)
 			artList.add(it.next().toString());
 		for (Iterator<Object> it = langListObject.iterator(); it.hasNext();)
 			langList.add(it.next().toString());
+		for (Iterator<Object> it = imgListObject.iterator(); it.hasNext();)
+			imgList.add(it.next().toString());
 
 		e.setVenueId(dbo.get("venueid").toString());
 		e.setArtist(artList);
 		e.setLanguage(langList);
-
+		e.setImage(imgList);
+		
 		// Return event object.
 		return e;
 	}
@@ -126,6 +137,7 @@ public class EventDao {
 			doc.put("language", event.getLanguage());
 			doc.put("time", event.getTime());
 			doc.put("venueid", event.getVenueId());
+			doc.put("image", event.getImage());
 
 			// Save a new event to the mongo collection.
 			coll.insert(doc);
@@ -154,6 +166,7 @@ public class EventDao {
 			edited.put("language", event.getLanguage());
 			edited.put("time", event.getTime());
 			edited.put("venueid", event.getVenueId());
+			edited.put("image", event.getImage());
 
 			// Update the existing event to the mongo database.
 			coll.update(existing, edited);
@@ -181,7 +194,7 @@ public class EventDao {
 		return "Failed";
 	}
 
-	public List<Event> getEventList (String id) {
+	public List<Event> getEventList(String id) {
 		List<Event> eventList = new ArrayList<Event>();
 		DBCollection coll = MongoFactory.getCollection(db_name, db_collection);
 
@@ -198,6 +211,7 @@ public class EventDao {
 			DBObject dbObject = cursor.next();
 			ArrayList<String> artList = new ArrayList<String>();
 			ArrayList<String> langList = new ArrayList<String>();
+			ArrayList<String> imgList = new ArrayList<String>();
 
 			Event event = new Event();
 			event.set_id(dbObject.get("_id").toString());
@@ -214,6 +228,10 @@ public class EventDao {
 			for (Iterator<Object> it = langListObject.iterator(); it.hasNext();)
 				langList.add(it.next().toString());
 
+			BasicDBList imgListObject = (BasicDBList) dbObject.get("image");
+			for (Iterator<Object> it = imgListObject.iterator(); it.hasNext();)
+				imgList.add(it.next().toString());
+
 			try {
 				event.setTime(MongoFactory.getDate(dbObject.get("time").toString()));
 			} catch (ParseException e) {
@@ -223,11 +241,11 @@ public class EventDao {
 			event.setVenueId(dbObject.get("venueid").toString());
 			event.setArtist(artList);
 			event.setLanguage(langList);
-
+			event.setImage(imgList);
+			
 			// Adding the event details to the list.
 			eventList.add(event);
 		}
 		return eventList;
-
 	}
 }

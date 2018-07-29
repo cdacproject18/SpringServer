@@ -51,7 +51,17 @@ public class EventController {
 	public ResponseEntity<List<Event>> getSportEvent() {
 		System.out.println("Inside sport event");
 		try {
-			return new ResponseEntity<List<Event>>(eventDao.getSportEvent(), HttpStatus.OK);
+			return new ResponseEntity<List<Event>>(eventDao.getEventList("100"), HttpStatus.OK);
+		} catch (RuntimeException e) {
+			return new ResponseEntity<List<Event>>(new ArrayList<Event>(), HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@GetMapping("list/concerts")
+	public ResponseEntity<List<Event>> getConcertEvent() {
+		System.out.println("Inside concert event");
+		try {
+			return new ResponseEntity<List<Event>>(eventDao.getEventList("101"), HttpStatus.OK);
 		} catch (RuntimeException e) {
 			return new ResponseEntity<List<Event>>(new ArrayList<Event>(), HttpStatus.NOT_FOUND);
 		}

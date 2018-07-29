@@ -181,7 +181,7 @@ public class EventDao {
 		return "Failed";
 	}
 
-	public List<Event> getSportEvent() {
+	public List<Event> getEventList (String id) {
 		List<Event> eventList = new ArrayList<Event>();
 		DBCollection coll = MongoFactory.getCollection(db_name, db_collection);
 
@@ -189,7 +189,7 @@ public class EventDao {
 		DBObject where_query = new BasicDBObject();
 
 		// Put the selected event id to search.
-		where_query.put("categoryid", "100");
+		where_query.put("categoryid", id);
 
 		// Fetching cursor object for iterating on the database records.
 		DBCursor cursor = coll.find(where_query);

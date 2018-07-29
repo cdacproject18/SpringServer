@@ -1,5 +1,6 @@
 package com.eventaddaserver.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -43,6 +44,16 @@ public class EventController {
 			return new ResponseEntity<Event>(eventDao.findEventById(String.valueOf(eveId)), HttpStatus.OK);
 		} catch (RuntimeException e) {
 			return new ResponseEntity<String>("Fetching info failed " + e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@GetMapping("list/sports")
+	public ResponseEntity<List<Event>> getSportEvent() {
+		System.out.println("Inside sport event");
+		try {
+			return new ResponseEntity<List<Event>>(eventDao.getSportEvent(), HttpStatus.OK);
+		} catch (RuntimeException e) {
+			return new ResponseEntity<List<Event>>(new ArrayList<Event>(), HttpStatus.NOT_FOUND);
 		}
 	}
 

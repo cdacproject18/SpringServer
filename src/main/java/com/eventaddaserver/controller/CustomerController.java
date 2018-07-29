@@ -24,7 +24,6 @@ import com.eventaddaserver.pojos.Customer;
 @CrossOrigin
 @RequestMapping("/customer")
 public class CustomerController {
-	private static Logger log = Logger.getLogger(CustomerController.class);
 
 	@Resource(name = "customerDao")
 	private CustomerDao customerDao;
@@ -32,11 +31,20 @@ public class CustomerController {
 	// Displaying the initial users list.
 	@GetMapping("/list")
 	public ResponseEntity<?> getPersons() {
-		log.debug("Request to fetch all users from the mongo database");
 		try {
 			return new ResponseEntity<List<Customer>>(customerDao.getAll(), HttpStatus.OK);
 		} catch (RuntimeException e) {
 			return new ResponseEntity<String>("Fetching a/c info failed " + e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+	}
+
+	// Validate user
+	@GetMapping("/{custId}/{custPass}")
+	public ResponseEntity<?> getCustomer(@PathVariable String custId, @PathVariable String custPass) {
+		try {
+			return new ResponseEntity<Customer>(customerDao.getCustomer(custId, custPass), HttpStatus.OK);
+		} catch (RuntimeException e) {
+			return new ResponseEntity<String>("Account not found: " + e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
 

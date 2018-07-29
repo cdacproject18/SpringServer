@@ -11,7 +11,7 @@ public class Event implements Serializable {
 	private String name;
 	private String categoryId;
 	private String description;
-	private List<String> venueId;
+	private String venueId;
 	private Date time;
 	private List<String> artist;
 	private List<String> language;
@@ -20,7 +20,7 @@ public class Event implements Serializable {
 		super();
 	}
 
-	public Event(String _id, String name, String categoryId, String description, List<String> venueId, Date time,
+	public Event(String _id, String name, String categoryId, String description, String venueId, Date time,
 			List<String> artist, List<String> language) {
 		super();
 		this._id = _id;
@@ -65,11 +65,11 @@ public class Event implements Serializable {
 		this.description = description;
 	}
 
-	public List<String> getVenueId() {
+	public String getVenueId() {
 		return venueId;
 	}
 
-	public void setVenueId(List<String> venueId) {
+	public void setVenueId(String venueId) {
 		this.venueId = venueId;
 	}
 

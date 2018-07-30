@@ -18,7 +18,7 @@ import com.eventaddaserver.pojos.Booking;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/boooking")
+@RequestMapping("/booking")
 public class BookingController {
 	@Resource(name = "bookingDao")
 	private BookingDao bookingDao;

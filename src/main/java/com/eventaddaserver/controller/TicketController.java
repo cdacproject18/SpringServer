@@ -1,5 +1,8 @@
 package com.eventaddaserver.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.http.HttpStatus;
@@ -25,13 +28,12 @@ public class TicketController {
 	private TicketDao ticketDao;
 
 	@GetMapping("/{bookId}")
-	public ResponseEntity<?> getTicket(@PathVariable int bookId) {
+	public ResponseEntity<List<Ticket>> getTicket(@PathVariable String bookId) {
 		System.out.println("in fetch " + bookId);
 		try {
-			Ticket t = ticketDao.findBookingById(String.valueOf(bookId));
-			return new ResponseEntity<Ticket>(t, HttpStatus.OK);
+			return new ResponseEntity<List<Ticket>>(ticketDao.findBookingById(bookId), HttpStatus.OK);
 		} catch (RuntimeException e) {
-			return new ResponseEntity<String>("Fetching booking info failed " + e.getMessage(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<List<Ticket>>(new ArrayList<Ticket>(), HttpStatus.NOT_FOUND);
 		}
 	}
 

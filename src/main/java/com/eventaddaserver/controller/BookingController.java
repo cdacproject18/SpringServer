@@ -58,10 +58,10 @@ public class BookingController {
 	}
 
 	@DeleteMapping("/{bookId}")
-	public ResponseEntity<String> deleteCategory(@PathVariable int bookId) {
+	public ResponseEntity<String> deleteCategory(@PathVariable String bookId) {
 		System.out.println("in cancellation " + bookId);
 		try {
-			return new ResponseEntity<String>(bookingDao.delete(String.valueOf(bookId)), HttpStatus.OK);
+			return new ResponseEntity<String>(bookingDao.delete(bookId), HttpStatus.OK);
 		} catch (RuntimeException e) {
 			return new ResponseEntity<String>("Cancellation Failed " + e.getMessage(), HttpStatus.NOT_FOUND);
 		}

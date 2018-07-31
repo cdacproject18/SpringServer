@@ -48,10 +48,10 @@ public class TicketController {
 	}
 
 	@DeleteMapping("/{bookId}")
-	public ResponseEntity<String> deleteBooking(@PathVariable int bookId) {
+	public ResponseEntity<String> deleteBooking(@PathVariable String bookId) {
 		System.out.println("in del " + bookId);
 		try {
-			return new ResponseEntity<String>(ticketDao.delete(String.valueOf(bookId)), HttpStatus.OK);
+			return new ResponseEntity<String>(ticketDao.delete(bookId), HttpStatus.OK);
 		} catch (RuntimeException e) {
 			return new ResponseEntity<String>("Ticket Cancellation failed " + e.getMessage(), HttpStatus.NOT_FOUND);
 		}

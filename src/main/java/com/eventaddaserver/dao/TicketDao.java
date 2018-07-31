@@ -1,17 +1,13 @@
 package com.eventaddaserver.dao;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.eventaddaserver.factory.MongoFactory;
-import com.eventaddaserver.pojos.Category;
-import com.eventaddaserver.pojos.Event;
 import com.eventaddaserver.pojos.SeatLocation;
 import com.eventaddaserver.pojos.Ticket;
 import com.mongodb.BasicDBList;
@@ -57,13 +53,19 @@ public class TicketDao {
 	// Delete a ticket on cancellation from the mongo database.
 	public String delete(String bid) {
 		try {
-			// Fetching the required category from the mongo database.
-			BasicDBObject item = (BasicDBObject) getDBObject(bid);
 
 			DBCollection coll = MongoFactory.getCollection(db_name, db_collection);
 
+			// Fetching the required tickets from the mongo database.
+			BasicDBObject item = new BasicDBObject();
+			item.append("bookingid", bid);
+
+			DBCursor cursor = coll.find(item);
+
 			// Deleting the selected category from the mongo database.
-			coll.remove(item);
+			while (cursor.hasNext()) {
+				coll.remove(cursor.next());
+			}
 			return "Booking cancelled successfully";
 		} catch (Exception e) {
 			System.out.println("Failed: " + e.getMessage());

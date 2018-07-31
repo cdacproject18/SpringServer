@@ -54,7 +54,6 @@ public class CustomerDao {
 	// Add a new user to the mongo database.
 	public String add(Customer cust) {
 		
-		int c=101;
 		System.out.println("Adding a new user to the mongo database; Entered user_name is= " + cust.getName());
 		try {
 			DBCollection coll = MongoFactory.getCollection(db_name, db_collection);

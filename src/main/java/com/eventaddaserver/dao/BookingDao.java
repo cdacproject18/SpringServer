@@ -1,6 +1,8 @@
 package com.eventaddaserver.dao;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +11,7 @@ import com.eventaddaserver.factory.MongoFactory;
 import com.eventaddaserver.pojos.Booking;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
 @Repository
@@ -16,8 +19,39 @@ import com.mongodb.DBObject;
 public class BookingDao {
 	static String db_name = "mydb", db_collection = "booking";
 
-	// Add a new Booking to the mongo database.
+	public List<Booking> getBookingByUser(String id) {
+		List<Booking> book_list = new ArrayList<Booking>();
+		DBCollection coll = MongoFactory.getCollection(db_name, db_collection);
 
+		// Fetching the record object from the mongo database.
+		DBObject where_query = new BasicDBObject();
+
+		// Put the selected category id to search.
+		where_query.put("customerid", id);
+
+		// Fetching cursor object for iterating on the database records.
+		DBCursor cursor = coll.find(where_query);
+
+		while (cursor.hasNext()) {
+			DBObject dbObject = cursor.next();
+			Booking b = new Booking();
+
+			b.set_id(dbObject.get("_id").toString());
+			try {
+				b.setTimestamp(MongoFactory.getDate(dbObject.get("timestamp").toString()));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			b.setPaymentstatus(Boolean.valueOf(dbObject.get("paymentstatus").toString()));
+			b.setCustomerid(dbObject.get("customerid").toString());
+			b.setEventid(dbObject.get("eventid").toString());
+			b.setNooftickets(dbObject.get("nooftickets").toString());
+			book_list.add(b);
+		}
+		return book_list;
+	}
+
+	// Add a new Booking to the mongo database.
 	public String add(Booking book) {
 		try {
 			DBCollection coll = MongoFactory.getCollection(db_name, db_collection);

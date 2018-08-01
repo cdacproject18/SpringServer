@@ -71,12 +71,12 @@ public class CustomerController {
 
 	// Deleting the specified user.
 	@DeleteMapping("/{custId}")
-	public ResponseEntity<String> delete(@PathVariable int custId) {
+	public ResponseEntity<String> delete(@PathVariable String custId) {
 		System.out.println("in remove customer");
 		try {
-			return new ResponseEntity<String>(customerDao.delete(String.valueOf(custId)), HttpStatus.OK);
+			return new ResponseEntity<String>(customerDao.delete(custId), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<String>("Deleion failed" + e.getMessage(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>("Deletion failed" + e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 
 	}

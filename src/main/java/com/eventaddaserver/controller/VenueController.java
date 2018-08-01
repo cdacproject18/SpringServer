@@ -37,10 +37,10 @@ public class VenueController {
 	}
 
 	@GetMapping("/{venId}")
-	public ResponseEntity<?> getVenue(@PathVariable int venId) {
+	public ResponseEntity<?> getVenue(@PathVariable String venId) {
 		System.out.println("Inside get venue");
 		try {
-			return new ResponseEntity<Venue>(venueDao.findVenueById(String.valueOf(venId)), HttpStatus.OK);
+			return new ResponseEntity<Venue>(venueDao.findVenueById(venId), HttpStatus.OK);
 		} catch (RuntimeException e) {
 			return new ResponseEntity<String>("Fetching info failed " + e.getMessage(), HttpStatus.NOT_FOUND);
 		}
@@ -67,10 +67,10 @@ public class VenueController {
 	}
 
 	@DeleteMapping("/{venId}")
-	public ResponseEntity<String> deleteVenue(@PathVariable int venId) {
+	public ResponseEntity<String> deleteVenue(@PathVariable String venId) {
 		System.out.println("in del " + venId);
 		try {
-			return new ResponseEntity<String>(venueDao.delete(String.valueOf(venId)), HttpStatus.OK);
+			return new ResponseEntity<String>(venueDao.delete(venId), HttpStatus.OK);
 		} catch (RuntimeException e) {
 			return new ResponseEntity<String>("Venue del failed " + e.getMessage(), HttpStatus.NOT_FOUND);
 		}

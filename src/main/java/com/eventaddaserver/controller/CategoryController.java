@@ -37,10 +37,10 @@ public class CategoryController {
 	}
 
 	@GetMapping("/{catId}")
-	public ResponseEntity<?> getCategory(@PathVariable int catId) {
+	public ResponseEntity<?> getCategory(@PathVariable String catId) {
 		System.out.println("in fetch " + catId);
 		try {
-			Category c = categoryDao.findCategoryById(String.valueOf(catId));
+			Category c = categoryDao.findCategoryById(catId);
 			return new ResponseEntity<Category>(c, HttpStatus.OK);
 		} catch (RuntimeException e) {
 			return new ResponseEntity<String>("Fetching by id failed " + e.getMessage(), HttpStatus.NOT_FOUND);
@@ -69,10 +69,10 @@ public class CategoryController {
 	}
 
 	@DeleteMapping("/{catId}")
-	public ResponseEntity<String> deleteCategory(@PathVariable int catId) {
+	public ResponseEntity<String> deleteCategory(@PathVariable String catId) {
 		System.out.println("in del " + catId);
 		try {
-			return new ResponseEntity<String>(categoryDao.delete(String.valueOf(catId)), HttpStatus.OK);
+			return new ResponseEntity<String>(categoryDao.delete(catId), HttpStatus.OK);
 		} catch (RuntimeException e) {
 			return new ResponseEntity<String>("deleting failed " + e.getMessage(), HttpStatus.NOT_FOUND);
 		}

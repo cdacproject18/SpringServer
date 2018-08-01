@@ -38,10 +38,10 @@ public class EventController {
 	}
 
 	@GetMapping("/{eveId}")
-	public ResponseEntity<?> getEvent(@PathVariable int eveId) {
+	public ResponseEntity<?> getEvent(@PathVariable String eveId) {
 		System.out.println("Inside get event");
 		try {
-			return new ResponseEntity<Event>(eventDao.findEventById(String.valueOf(eveId)), HttpStatus.OK);
+			return new ResponseEntity<Event>(eventDao.findEventById(eveId), HttpStatus.OK);
 		} catch (RuntimeException e) {
 			return new ResponseEntity<String>("Fetching info failed " + e.getMessage(), HttpStatus.NOT_FOUND);
 		}
@@ -88,10 +88,10 @@ public class EventController {
 	}
 
 	@DeleteMapping("/{eveId}")
-	public ResponseEntity<String> deleteEvent(@PathVariable int eveId) {
+	public ResponseEntity<String> deleteEvent(@PathVariable String eveId) {
 		System.out.println("in del " + eveId);
 		try {
-			return new ResponseEntity<String>(eventDao.delete(String.valueOf(eveId)), HttpStatus.OK);
+			return new ResponseEntity<String>(eventDao.delete(eveId), HttpStatus.OK);
 		} catch (RuntimeException e) {
 			return new ResponseEntity<String>("Event del failed " + e.getMessage(), HttpStatus.NOT_FOUND);
 		}

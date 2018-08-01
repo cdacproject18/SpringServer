@@ -26,9 +26,9 @@ public class BookingController {
 	@Resource(name = "bookingDao")
 	private BookingDao bookingDao;
 
-	@GetMapping("/customer/{custId}")
+	@GetMapping("/customer/{custId:.+}")
 	public ResponseEntity<List<Booking>> getBookingByCustomer(@PathVariable String custId) {
-		System.out.println("Inside get booking by customer");
+		System.out.println("Inside get booking by customer" + custId);
 		try {
 			return new ResponseEntity<List<Booking>>(bookingDao.getBookingByUser(custId), HttpStatus.OK);
 		} catch (RuntimeException e) {
@@ -37,10 +37,10 @@ public class BookingController {
 	}
 
 	@GetMapping("/{bookId}")
-	public ResponseEntity<?> getBooking(@PathVariable int bookId) {
+	public ResponseEntity<?> getBooking(@PathVariable String bookId) {
 		System.out.println("in fetch " + bookId);
 		try {
-			Booking b = bookingDao.findBookingById(String.valueOf(bookId));
+			Booking b = bookingDao.findBookingById(bookId);
 			return new ResponseEntity<Booking>(b, HttpStatus.OK);
 		} catch (RuntimeException e) {
 			return new ResponseEntity<String>("Fetching a/c info failed " + e.getMessage(), HttpStatus.NOT_FOUND);
